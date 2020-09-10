@@ -11,18 +11,17 @@ class eventobservers
         $db   = '';
         $user = '';
         $pass = '';
+
+        $connectionInfo = array("UID"=>$user, "PWD"=>$pass, "Database"=>$db);
+        $conn = sqlsrv_connect( $host, $connectionInfo);  
         
-        $conn =  new mysqli($host, $user, $pass, $db);
-
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-
         $sql = "log_moodle_attempt 'satisfied'";
-                
-        $conn->query($sql);
-        
-        $conn->close();
+        $stmt = sqlsrv_query( $conn, $sql);  
+
+        if(!$stmt)  
+        {
+            die( print_r( sqlsrv_errors(), true));  
+        }  
     }
 }
 
